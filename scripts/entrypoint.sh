@@ -348,8 +348,9 @@ cd $GAIAD_HOME
       # lz4 -d -v --rm cosmoshub-3.20200415.0105.tar.lz4 | tar xf -
       apk upgrade -a
       apk add --no-cache aria2
-      aria2c -x5 https://get.quicksync.io/cosmoshub-3-default.20201216.0510.tar.lz4
-      lz4 -d -v --rm cosmoshub-3-default.20201216.0510.tar.lz4 | tar xf -
+      aria2c -x5 https://get.quicksync.io/cosmoshub-3-default.20201223.0510.tar.lz4
+      lz4 -d -v --rm cosmoshub-3-default.20201223.0510.tar.lz4 | tar xf -
+  
   fi
 
 fi
