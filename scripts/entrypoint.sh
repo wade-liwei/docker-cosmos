@@ -11,7 +11,7 @@ if [ ! -f "$GAIAD_HOME/config/config.toml" ]; then
 	cd "$GAIAD_HOME/config"
 
 	rm genesis.json
-	rm genesis.cosmoshub-4.json
+	#rm genesis.cosmoshub-4.json
 	rm config.toml
 	rm app.toml
 
