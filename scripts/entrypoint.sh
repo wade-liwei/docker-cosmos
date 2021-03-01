@@ -32,11 +32,11 @@ if [ ! -f "$GAIAD_HOME/config/config.toml" ]; then
 	mv  ${GAIAD_HOME}/config/priv_validator_key.json  ${GAIAD_HOME}/config/priv_validator_key.json-${date}_bak
   cp  ${OLD_GAIAD_HOME}/config/priv_validator_key.json   ${GAIAD_HOME}/config/priv_validator_key.json
 
-	
+
 	cd "$GAIAD_HOME/config"
 
 	rm genesis.json
-	rm genesis.cosmoshub-4.json
+	#rm genesis.cosmoshub-4.json
 	rm config.toml
 	rm app.toml
 
