@@ -158,4 +158,9 @@ EXPOSE 1317
 
 docker  run  -itd  -p 36656:26656 -p 36657:26657  -p 36658:26658  -p  2317:1317  --name="cosmos-mainnet-self"    -v  /data/cosmoshub-4-data-self-1:/.gaiad   -v /data/logs:/logs  self-cosmoshub-4
 
+
+
+
+docker  run  -itd  -p 36656:26656 -p 36657:26657  -p 36658:26658  -p  2317:1317  --name="cosmos-mainnet-update"    -v  /data/liwei/gaiad-v4.0.4:/.gaiad   -v /data/logs:/logs      cosmos-hub-3-update-to-4
+
 ```

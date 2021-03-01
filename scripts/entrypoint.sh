@@ -2,48 +2,54 @@
 
 # exit script on any error
 set -e
+
+
+
 date=$(date '+%Y-%m-%d_%H:%M:%S')
 oldChainId="cosmoshub-3"
-GAIAD_HOME_COSMOSHUB_3_bak="${oldChainId}"-"${date}".bak
+chainIdInGenesis=$(cat -u  "${GAIAD_HOME:-/.gaiad}"/config/genesis.json 2>&1 | jq -r '.chain_id' 2>&1)
 
-chainIdInGenesis=$(cat -u  "${GAIAD_HOME}"/config/genesis.json 2>&1 | jq -r '.chain_id' 2>&1)
-
-
-echo "chainIdInGenesis=$chainIdInGenesis,oldChainId=$oldChainId"
 
 if [ "$chainIdInGenesis" = "$oldChainId" ];then
-   echo "!!! backup $oldChainId home dir. !!!"
 
-   echo "old dir"
-   ls
-   mv   "${GAIAD_HOME}"  "${GAIAD_HOME_COSMOSHUB_3_bak}"
-   echo "new dir"
-   ls
+	OLD_GAIAD_HOME=${GAIAD_HOME}
+	GAIAD_HOME="${GAIAD_HOME}"/cosmoshub-4
+	echo "OLD_GAIAD_HOME : ${OLD_GAIAD_HOME}"
+	echo "GAIAD_HOME     : ${GAIAD_HOME}"
 
-   echo "setting up initial configurations"
-   if [ ! -f "$GAIAD_HOME/config/config.toml" ]; then
-	 	gaiad init "${MONIKER:-nonamenode}" --home="${GAIAD_HOME}" --chain-id="${CHAIN_ID:-cosmoshub-4}"
+fi
 
-	 	mv  ${GAIAD_HOME}/config/priv_validator_key.json  ${GAIAD_HOME}/config/priv_validator_key.json-${date}_bak
-	 	cp  ${GAIAD_HOME_COSMOSHUB_3_bak}/config/priv_validator_key.json   ${GAIAD_HOME}/config/priv_validator_key.json
 
-	 	cd "$GAIAD_HOME/config"
 
-	 	rm genesis.json
-	 	#rm genesis.cosmoshub-4.json
-	 	rm config.toml
-	 	rm app.toml
 
-		if [ ! -z "$GENESIS_URL" ]; then
-			wget "$GENESIS_URL"
-		else
-			wget https://github.com/cosmos/mainnet/raw/master/genesis.cosmoshub-4.json.gz
-			gzip -d genesis.cosmoshub-4.json.gz
-			cp genesis.cosmoshub-4.json genesis.json
-			rm genesis.cosmoshub-4.json
-		fi
+echo "setting up initial configurations"
 
-		cat >config.toml <<EOF
+if [ ! -f "$GAIAD_HOME/config/config.toml" ]; then
+
+	gaiad init "${MONIKER:-nonamenode}" --home="${GAIAD_HOME:-/.gaiad}" --chain-id="${CHAIN_ID:-cosmoshub-4}"
+
+
+	mv  ${GAIAD_HOME}/config/priv_validator_key.json  ${GAIAD_HOME}/config/priv_validator_key.json-${date}_bak
+  cp  ${OLD_GAIAD_HOME}/config/priv_validator_key.json   ${GAIAD_HOME}/config/priv_validator_key.json
+
+	
+	cd "$GAIAD_HOME/config"
+
+	rm genesis.json
+	rm genesis.cosmoshub-4.json
+	rm config.toml
+	rm app.toml
+
+	if [ ! -z "$GENESIS_URL" ]; then
+		wget "$GENESIS_URL"
+	else
+		wget https://github.com/cosmos/mainnet/raw/master/genesis.cosmoshub-4.json.gz
+		gzip -d genesis.cosmoshub-4.json.gz
+		cp genesis.cosmoshub-4.json genesis.json
+		rm genesis.cosmoshub-4.json
+	fi
+
+	cat >config.toml <<EOF
 # This is a TOML config file.
 # For more information, see https://github.com/toml-lang/toml
 
@@ -581,7 +587,6 @@ EOF
 	#     lz4 -d -v --rm cosmoshub-3.20200415.0105.tar.lz4 | tar xf -
 	# fi
 
-fi
 fi
 
 exec supervisord --nodaemon --configuration /etc/supervisor/supervisord.conf
