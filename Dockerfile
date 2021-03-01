@@ -22,6 +22,13 @@ RUN make install
 
 FROM alpine:edge
 
+
+
+RUN apk update \
+ && apk add jq \
+ && rm -rf /var/cache/apk/*
+
+# entrypoint取消了默认的 :-/.gaiad； 这里必须定义 GAIAD_HOME；
 ENV GAIAD_HOME=/.gaiad
 ENV MONIKER=Bitrue
 ENV CHAIN_ID=cosmoshub-4
