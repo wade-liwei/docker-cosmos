@@ -7,13 +7,13 @@ set -e
 
 date=$(date '+%Y-%m-%d_%H:%M:%S')
 oldChainId="cosmoshub-3"
-chainIdInGenesis=$(cat -u  "${GAIAD_HOME:-/.gaiad}"/config/genesis.json 2>&1 | jq -r '.chain_id' 2>&1)
+chainIdInGenesis=$(cat -u  "${GAIAD_HOME}"/config/genesis.json 2>&1 | jq -r '.chain_id' 2>&1)
 
 
 if [ "$chainIdInGenesis" = "$oldChainId" ];then
 
 	OLD_GAIAD_HOME=${GAIAD_HOME}
-	GAIAD_HOME="${GAIAD_HOME}"/cosmoshub-4
+	GAIAD_HOME="${GAIAD_HOME:-/.gaiad}"/cosmoshub-4
 	echo "OLD_GAIAD_HOME : ${OLD_GAIAD_HOME}"
 	echo "GAIAD_HOME     : ${GAIAD_HOME}"
 
@@ -26,7 +26,7 @@ echo "setting up initial configurations"
 
 if [ ! -f "$GAIAD_HOME/config/config.toml" ]; then
 
-	gaiad init "${MONIKER:-nonamenode}" --home="${GAIAD_HOME:-/.gaiad}" --chain-id="${CHAIN_ID:-cosmoshub-4}"
+	gaiad init "${MONIKER:-nonamenode}" --home="${GAIAD_HOME}" --chain-id="${CHAIN_ID:-cosmoshub-4}"
 
 
 	mv  ${GAIAD_HOME}/config/priv_validator_key.json  ${GAIAD_HOME}/config/priv_validator_key.json-${date}_bak
